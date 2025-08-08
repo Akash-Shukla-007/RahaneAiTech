@@ -2,6 +2,14 @@
 
 A modern, responsive full-stack admin dashboard built with Next.js, Express.js, and MongoDB that implements role-based access control with different user roles (admin, editor, viewer) and their respective permissions.
 
+
+## 🔗 Live Demo
+
+Check out the live deployed version of the project:
+
+👉 [https://rahane-ai.vercel.app/](https://rahane-ai.vercel.app/)
+
+
 ## ✨ Features
 
 ### 🔐 Authentication & Authorization
