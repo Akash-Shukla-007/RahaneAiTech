@@ -149,21 +149,23 @@ RahaneAiTech/
 ## 👥 User Roles & Permissions
 
 ### 🔴 Admin
-- **Full Access**: Complete control over all features
+- **Full Access**: Complete control over user management and system monitoring
 - **User Management**: Create, edit, delete users and change roles
 - **System Monitoring**: View comprehensive activity logs
-- **Content Management**: Full CRUD operations on all content
+- **No Content Access**: Cannot create, edit, or view content
 - **Analytics**: Access to system statistics and reports
 
 ### 🔵 Editor
 - **Content Creation**: Create, edit, and delete posts and comments
 - **Content Management**: Access to content management features
 - **Limited Scope**: Restricted to content operations only
+- **No User Management**: Cannot manage users or view logs
 
 ### 🟢 Viewer
 - **Read-Only Access**: View published content and dashboard
 - **Content Library**: Browse and read content
 - **No Management**: Cannot create, edit, or delete content
+- **No User Management**: Cannot manage users or view logs
 
 ## 📱 Responsive Design Features
 

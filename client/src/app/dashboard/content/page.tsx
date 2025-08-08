@@ -123,14 +123,14 @@ export default function ContentPage() {
   };
 
   // Check if user has no access at all
-  if (!user || !['admin', 'editor', 'viewer'].includes(user.role)) {
+  if (!user || !['editor', 'viewer'].includes(user.role)) {
     return (
       <DashboardLayout>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
             <h2 className="text-2xl font-semibold text-gray-600 mb-2">Access Denied</h2>
-            <p className="text-gray-500">You don't have permission to access content.</p>
+            <p className="text-gray-500">You don't have permission to access content management.</p>
           </div>
         </div>
       </DashboardLayout>
@@ -138,8 +138,8 @@ export default function ContentPage() {
   }
 
   const isViewer = user?.role === 'viewer';
-  const canEdit = ['admin', 'editor'].includes(user?.role || '');
-  const canView = ['admin', 'editor', 'viewer'].includes(user?.role || '');
+  const canEdit = user?.role === 'editor';
+  const canView = ['editor', 'viewer'].includes(user?.role || '');
 
   return (
     <DashboardLayout>

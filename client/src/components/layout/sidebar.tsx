@@ -41,7 +41,7 @@ const Sidebar = ({ onClose }: SidebarProps) => {
       name: 'Content',
       href: '/dashboard/content',
       icon: FileText,
-      roles: ['admin', 'editor', 'viewer']
+      roles: ['editor', 'viewer']
     },
     {
       name: 'Activity Logs',

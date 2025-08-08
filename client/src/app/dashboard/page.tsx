@@ -46,9 +46,15 @@ const DashboardPage = () => {
       );
     }
     
-    if (['admin', 'editor'].includes(user?.role || '')) {
+    if (user?.role === 'editor') {
       actions.push(
         { name: 'Manage Content', href: '/dashboard/content', icon: FileText, color: 'bg-green-500' }
+      );
+    }
+
+    if (user?.role === 'viewer') {
+      actions.push(
+        { name: 'View Content', href: '/dashboard/content', icon: FileText, color: 'bg-green-500' }
       );
     }
     
@@ -169,16 +175,22 @@ const DashboardPage = () => {
                 <span className="text-sm text-gray-700">View system activity logs</span>
               </div>
             )}
-            {['admin', 'editor'].includes(user?.role || '') && (
+            {user?.role === 'editor' && (
               <div className="flex items-start space-x-3">
                 <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                 <span className="text-sm text-gray-700">Create and edit content</span>
               </div>
             )}
-            {['admin', 'editor', 'viewer'].includes(user?.role || '') && (
+            {user?.role === 'viewer' && (
               <div className="flex items-start space-x-3">
                 <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
                 <span className="text-sm text-gray-700">View content and dashboard</span>
+              </div>
+            )}
+            {['admin', 'editor', 'viewer'].includes(user?.role || '') && (
+              <div className="flex items-start space-x-3">
+                <div className="w-2 h-2 bg-gray-500 rounded-full mt-2 flex-shrink-0"></div>
+                <span className="text-sm text-gray-700">Access dashboard overview</span>
               </div>
             )}
           </div>
