@@ -11,16 +11,35 @@ interface DashboardLayoutProps {
 }
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
-  const { user, loading } = useAuth();
+  const { user, loading, refreshAuth } = useAuth();
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [authError, setAuthError] = useState(false);
 
   useEffect(() => {
+    // Only redirect if we're not loading and there's definitely no user
     if (!loading && !user) {
       router.push('/login');
     }
   }, [user, loading, router]);
 
+  // Handle authentication errors by trying to refresh
+  useEffect(() => {
+    if (authError) {
+      const retryAuth = async () => {
+        try {
+          await refreshAuth();
+          setAuthError(false);
+        } catch (error) {
+          // If refresh fails, redirect to login
+          router.push('/login');
+        }
+      };
+      retryAuth();
+    }
+  }, [authError, refreshAuth, router]);
+
+  // Show loading spinner while checking authentication
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -29,6 +48,19 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     );
   }
 
+  // Show error state if authentication failed
+  if (authError) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto mb-4"></div>
+          <p className="text-gray-600">Checking authentication...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Don't render anything while redirecting
   if (!user) {
     return null;
   }

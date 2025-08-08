@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -28,11 +28,11 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     // Only redirect to login if we have a token (authenticated user)
-    // This prevents redirects during login attempts with wrong credentials
+    // and the error is a 401 (Unauthorized)
     if (error.response?.status === 401 && localStorage.getItem('token')) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      window.location.href = '/login';
+      // Don't redirect immediately, let the component handle it
+      // This prevents race conditions during initial auth checks
+      console.warn('Authentication token expired or invalid');
     }
     return Promise.reject(error);
   }

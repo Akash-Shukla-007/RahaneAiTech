@@ -19,6 +19,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   register: (userData: RegisterData) => Promise<void>;
+  refreshAuth: () => Promise<void>;
 }
 
 interface RegisterData {
@@ -49,11 +50,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (token && savedUser) {
         try {
+          // Add a small delay to prevent race conditions
+          await new Promise(resolve => setTimeout(resolve, 100));
+          
           const response = await api.get('/auth/profile');
           setUser(response.data.user);
-        } catch (error) {
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
+        } catch (error: any) {
+          // Only clear auth data if it's a 401 error (token expired/invalid)
+          if (error.response?.status === 401) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            setUser(null);
+          } else if (error.response?.status >= 500) {
+            // Server error - keep user logged in and let them retry
+            console.warn('Server error during auth check, keeping user logged in');
+          } else {
+            // Network error or other issues - keep user logged in
+            console.warn('Network error during auth check, keeping user logged in');
+          }
         }
       }
       setLoading(false);
@@ -122,12 +136,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const refreshAuth = async () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const response = await api.get('/auth/profile');
+        setUser(response.data.user);
+      } catch (error: any) {
+        if (error.response?.status === 401) {
+          logout();
+        }
+      }
+    }
+  };
+
   const value = {
     user,
     loading,
     login,
     logout,
     register,
+    refreshAuth,
   };
 
   return (
